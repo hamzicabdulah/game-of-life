@@ -1,7 +1,6 @@
 .Cell {
     width: 9px;
     height: 9px;
-    background: red;
     display: inline-block;
     border: solid 1px black;
 }

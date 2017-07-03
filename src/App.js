@@ -11,7 +11,7 @@ class App extends Component {
     return (
       <div className="App">
         {this.state.cellsArr.map((row) =>
-					<div>
+					<div className="Row">
             {row.map((cell) => 
               <Cell />
             )}
