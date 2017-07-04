@@ -10,12 +10,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.state.cellsArr.map((row) =>
-					<div className="Row">
-            {row.map((cell) => 
-              <Cell />
-            )}
-          </div>
+        {this.state.cellsArr.map((cell) =>
+          <Cell number={cell}/>
 				)}
       </div>
     );
@@ -24,14 +20,11 @@ class App extends Component {
 
 function generateArray(columns, rows) {
   let cellsArr = [];
-  for (var row = 1; row <= rows; row++) {
-    cellsArr.push([]);
+  let totalCells = columns * rows;
+
+  for (var cell = 1; cell <= totalCells; cell++) {
+    cellsArr.push(cell);
   }
-  cellsArr.forEach((row) => {
-    for (var col = 1; col <= columns; col++) {
-      row.push(col);
-    }
-  })
   return cellsArr;
 }
 

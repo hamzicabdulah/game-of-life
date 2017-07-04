@@ -1,8 +1,6 @@
 .App {
+  width: 709px;
   text-align: center;
   margin: 3em auto 3em;
   padding: 0;
-}
-.Row {
-  margin: -.5em 0;
 }

@@ -4,7 +4,7 @@ import './Cell.css';
 class Cell extends Component {
   render() {
     return (
-      <div className="Cell">
+      <div className={"Cell " + this.props.number}>
       </div>
     );
   }
