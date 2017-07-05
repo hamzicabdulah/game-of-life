@@ -7,3 +7,6 @@
     margin: 0;
     float: left;    
 }
+.alive {
+    background: black;
+}
