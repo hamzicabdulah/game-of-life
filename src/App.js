@@ -11,11 +11,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.nextGen, 9000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
+    this.interval = setInterval(this.nextGen, 150);
   }
 
   render() {
@@ -39,12 +35,15 @@ class App extends Component {
 
   nextGen = () => {
     //Go through every cell and update their life with "dead" or "alive", depending on their neighbor cells
-    let cells = this.state.cells;
+    //The cells object must use an additional function to clone this.state.cells, because cells=this.state.cells points to the same object
+    let cells = cloneObject(this.state.cells);
     Object.keys(cells).forEach((number) => {
-      let life = this.killOrGiveBirth(number);
-      cells[number] = life;
+      cells[number] = this.killOrGiveBirth(number);
+      
+      if(+number === columns * rows) {
+        this.setState({cells: cells});
+      }
     });
-    this.setState({cells: cells});
   }
   
   killOrGiveBirth = (number) => {
@@ -70,6 +69,16 @@ function generateCells(columns, rows) {
     cells[cell] = ['alive', 'dead'][Math.floor(Math.random() * 2)];
   }
   return cells;
+}
+
+function cloneObject(object) {
+  let objectCopy = {};
+
+  Object.keys(object).forEach((key) => {
+    objectCopy[key] = object[key];
+  });
+
+  return objectCopy;
 }
 
 function neighborCells(numberStr, columns, rows) {
@@ -115,7 +124,11 @@ function neighborCells(numberStr, columns, rows) {
 
 function deadOrAlive(cellLife, aliveNeighbors) {
   //Return dead if cell should die, or alive if cell should be born (depending on the aliveNeighbors)
-  return (aliveNeighbors === 3 || (aliveNeighbors === 2 && cellLife === 'alive')) ? 'alive' : 'dead';
+  if(aliveNeighbors === 3 || (aliveNeighbors === 2 && cellLife === 'alive')) {
+    return 'alive';
+  } else {
+    return 'dead';
+  }
 }
 
 export default App;
