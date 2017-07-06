@@ -6,7 +6,8 @@ class Cell extends Component {
     return (
       <div className={"Cell " + this.props.life + " " + this.props.number} onClick={this.props.changeLife}>
       </div>
-    );  }
+    );  
+  }
 
 }
 

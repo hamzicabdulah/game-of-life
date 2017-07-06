@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../stylesheet/App.css';
+import Header from './Header';
 import Cell from './Cell';
 
 let rows = 50;
@@ -17,6 +18,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Header />
         <div className="container">
           {Object.keys(this.state.cells).map((number) =>
             <Cell number={number} life={this.state.cells[number]} changeLife={() => this.changeLife(number)}/>
