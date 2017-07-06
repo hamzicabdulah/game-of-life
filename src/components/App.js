@@ -11,7 +11,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.nextGen, 250);
+    this.interval = setInterval(this.nextGen, 100);
   }
 
   render() {
@@ -47,11 +47,12 @@ class App extends Component {
   }
   
   killOrGiveBirth = (number) => {
+    //Make a cell dead or alive with external functions
     let cellsToCheck = neighborCells(number, columns, rows);
     let aliveNeighbors = 0;
 
     cellsToCheck.forEach((cellNum) => {
-      if (this.state.cells[cellNum] === 'alive') aliveNeighbors++;
+      if (this.state.cells[cellNum] === 'alive' || this.state.cells[cellNum] === 'born') aliveNeighbors++;
     });
 
     return deadOrAlive(this.state.cells[number], aliveNeighbors);
@@ -124,8 +125,10 @@ function neighborCells(numberStr, columns, rows) {
 
 function deadOrAlive(cellLife, aliveNeighbors) {
   //Return dead if cell should die, or alive if cell should be born (depending on the aliveNeighbors)
-  if(aliveNeighbors === 3 || (aliveNeighbors === 2 && cellLife === 'alive')) {
+  if(cellLife !== 'dead' && (aliveNeighbors === 3 || aliveNeighbors === 2)) {
     return 'alive';
+  } else if(aliveNeighbors === 3) {
+    return 'born';
   } else {
     return 'dead';
   }

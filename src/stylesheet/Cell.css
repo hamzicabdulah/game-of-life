@@ -1,13 +1,19 @@
 .Cell {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
     display: inline-block;
-    border-left: solid 1px black;
-    border-top: solid 1px black;
+    border-left: solid 1px #424242;
+    border-top: solid 1px #424242;
     margin: 0;
     float: left;    
     cursor: pointer;
 }
+.dead {
+    background: #660033;
+}
 .alive {
-    background: black;
+    background: #4CAF50;
+}
+.born {
+    background: #C8E6C9;
 }
