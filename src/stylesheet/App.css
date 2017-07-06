@@ -1,8 +1,10 @@
 .container {
   display: flex;
   flex-wrap: wrap;
-  width: 709px;
+  width: 700px;
   text-align: center;
   margin: 3em auto 3em;
   padding: 0;
+  border-bottom: solid 1px;
+  border-right: solid 1px;
 }
