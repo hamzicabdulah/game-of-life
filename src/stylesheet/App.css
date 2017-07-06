@@ -1,4 +1,6 @@
 .container {
+  display: flex;
+  flex-wrap: wrap;
   width: 709px;
   text-align: center;
   margin: 3em auto 3em;

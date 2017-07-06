@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Cell.css';
+import '../stylesheet/Cell.css';
 
 class Cell extends Component {
   render() {

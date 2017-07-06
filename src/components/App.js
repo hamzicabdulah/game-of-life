@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import '../stylesheet/App.css';
 import Cell from './Cell';
 
 let rows = 50;
@@ -11,7 +11,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.nextGen, 150);
+    this.interval = setInterval(this.nextGen, 250);
   }
 
   render() {

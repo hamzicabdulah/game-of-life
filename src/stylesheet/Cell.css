@@ -6,6 +6,7 @@
     border-top: solid 1px black;
     margin: 0;
     float: left;    
+    cursor: pointer;
 }
 .alive {
     background: black;
