@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import '../stylesheet/App.css';
 import Header from './Header';
 import Cell from './Cell';
-import Button from './Button'
+import Button from './Button';
 
-const rows = 50, columns = 70;
+let rows = 50, columns = 70;
+
+const buttons = {
+  mainButtons: ['Run', 'Pause', 'Clear'],
+  speedButtons: ['Slow', 'Medium', 'Fast'],
+  sizeButtons: ['50x30', '70x50', '100x80']
+}
 
 class App extends Component {
-  
-  buttons = ['Run', 'Pause', 'Clear']
 
   state = {
     interval: '',
-    intervalSpeed: 50,
-    rows: rows,
-    columns: columns,
+    intervalSpeed: 100,
     cells: generateCells(columns, rows),
     gamePaused: true,
   }
@@ -25,18 +27,34 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{width: (columns * 11 + 50) + 'px'}}>
         <Header />
-        <div className="container">
+        <div className="mainButtons">
+          {buttons.mainButtons.map((button) =>
+            //Since all button functions have the same names as the actual buttons, they can be accessed with this[button]
+            <Button name={button} onClickFunc={() => this[button]()}/>
+          )}    
+        </div>
+        <div className="container" style={{
+          width: (columns * 11 - 0.1) + 'px',
+          gridTemplateColumns: 'repeat(' + columns + ', 11px)'
+        }}>
           {Object.keys(this.state.cells).map((number) =>
             <Cell number={number} life={this.state.cells[number]} changeLife={() => this.changeLife(number)}/>
           )}
         </div>
-        <div>
-          {this.buttons.map((button) =>
-            //Since all button functions have the same names as the actual buttons, they can be accessed with this[button]
-            <Button name={button} onClickFunc={() => this[button]()}/>
-          )}    
+        <div className="bottomButtons">
+          <div className="sizeButtons">
+            {buttons.sizeButtons.map((button) =>
+              <Button name={button} onClickFunc={() => this.changeSize(button)}/>
+            )}    
+          </div>
+          <div className="speedButtons">
+            {buttons.speedButtons.map((button) =>
+              //Since all button functions have the same names as the actual buttons, they can be accessed with this[button]
+              <Button name={button} onClickFunc={() => this[button]()}/>
+            )}    
+          </div>
         </div>
       </div>
     );
@@ -56,7 +74,7 @@ class App extends Component {
     Object.keys(cells).forEach((number) => {
       cells[number] = this.killOrGiveBirth(number);
       
-      if(+number === this.state.columns * this.state.rows) {
+      if(+number === columns * rows) {
         this.setState({cells: cells});
       }
     });
@@ -66,7 +84,7 @@ class App extends Component {
   
   killOrGiveBirth = (number) => {
     //Make a cell dead or alive with external functions
-    let cellsToCheck = neighborCells(number, this.state.columns, this.state.rows);
+    let cellsToCheck = neighborCells(number, columns, rows);
     let aliveNeighbors = 0;
 
     cellsToCheck.forEach((cellNum) => {
@@ -108,6 +126,12 @@ class App extends Component {
     });
 
     this.setState({cells: cells});
+  }
+
+  changeSize = (size) => {
+    // eslint-disable-next-line
+    columns = +(size.split('x')[0]), rows = +(size.split('x')[1]);
+    this.setState({cells: generateCells(columns, rows)});
   }
   
 }
