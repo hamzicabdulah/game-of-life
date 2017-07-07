@@ -2,17 +2,25 @@ import React, { Component } from 'react';
 import '../stylesheet/App.css';
 import Header from './Header';
 import Cell from './Cell';
+import Button from './Button'
 
-let rows = 50;
-let columns = 70;
+const rows = 50, columns = 70;
 
 class App extends Component {
+  
+  buttons = ['Run', 'Pause', 'Clear']
+
   state = {
-    cells: generateCells(columns, rows)
+    interval: '',
+    intervalSpeed: 50,
+    rows: rows,
+    columns: columns,
+    cells: generateCells(columns, rows),
+    gamePaused: true,
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.nextGen, 100);
+    this.Run();
   }
 
   render() {
@@ -23,6 +31,12 @@ class App extends Component {
           {Object.keys(this.state.cells).map((number) =>
             <Cell number={number} life={this.state.cells[number]} changeLife={() => this.changeLife(number)}/>
           )}
+        </div>
+        <div>
+          {this.buttons.map((button) =>
+            //Since all button functions have the same names as the actual buttons, they can be accessed with this[button]
+            <Button name={button} onClickFunc={() => this[button]()}/>
+          )}    
         </div>
       </div>
     );
@@ -42,15 +56,17 @@ class App extends Component {
     Object.keys(cells).forEach((number) => {
       cells[number] = this.killOrGiveBirth(number);
       
-      if(+number === columns * rows) {
+      if(+number === this.state.columns * this.state.rows) {
         this.setState({cells: cells});
       }
     });
+
+    if(this.tableEmpty()) this.Pause(); 
   }
   
   killOrGiveBirth = (number) => {
     //Make a cell dead or alive with external functions
-    let cellsToCheck = neighborCells(number, columns, rows);
+    let cellsToCheck = neighborCells(number, this.state.columns, this.state.rows);
     let aliveNeighbors = 0;
 
     cellsToCheck.forEach((cellNum) => {
@@ -58,6 +74,40 @@ class App extends Component {
     });
 
     return deadOrAlive(this.state.cells[number], aliveNeighbors);
+  }
+
+  tableEmpty = () => {
+    //Check every cell in the table and return false if any one of them is alive, otherwise return true
+    for(var key in this.state.cells) {
+      if(this.state.cells[key] !== 'dead') {
+        return false;
+      };
+    }
+    return true;
+  }
+
+  Run = () => {
+    if(this.state.gamePaused) {
+      this.setState({interval: setInterval(this.nextGen, this.state.intervalSpeed), gamePaused: false});
+    }
+  }
+
+  Pause = () => {
+    if(!this.state.gamePaused) {
+      this.setState({interval: clearInterval(this.state.interval), gamePaused: true});
+    }
+  }
+
+  Clear = () => { 
+    //Pause the game and change every cell's life property to "dead"
+    this.Pause();
+    var cells = {};
+
+    Object.keys(this.state.cells).forEach((cell) => {
+      cells[cell] = 'dead';
+    });
+
+    this.setState({cells: cells});
   }
   
 }
