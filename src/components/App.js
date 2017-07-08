@@ -3,6 +3,7 @@ import '../stylesheet/App.css';
 import Header from './Header';
 import Cell from './Cell';
 import Button from './Button';
+import Generation from './Generation';
 
 let rows = 50, columns = 70;
 
@@ -18,7 +19,9 @@ class App extends Component {
     interval: '',
     intervalSpeed: 100,
     cells: generateCells(columns, rows),
+    cellsNeighbors: generateNeighbors(columns, rows),
     gamePaused: true,
+    generation: 0
   }
 
   componentDidMount() {
@@ -52,10 +55,11 @@ class App extends Component {
           <div className="speedButtons">
             {buttons.speedButtons.map((button) =>
               //Since all button functions have the same names as the actual buttons, they can be accessed with this[button]
-              <Button name={button} onClickFunc={() => this[button]()}/>
+              <Button name={button} onClickFunc={() => this.changeSpeed(button)}/>
             )}    
           </div>
         </div>
+        <Generation generation={this.state.generation} />
       </div>
     );
   }
@@ -75,16 +79,19 @@ class App extends Component {
       cells[number] = this.killOrGiveBirth(number);
       
       if(+number === columns * rows) {
-        this.setState({cells: cells});
+        this.setState({cells: cells, generation: this.state.generation + 1});
       }
     });
 
-    if(this.tableEmpty()) this.Pause(); 
+    if(this.tableEmpty()) {
+      this.Pause();
+      this.setState({generation: 0});
+    } 
   }
   
   killOrGiveBirth = (number) => {
     //Make a cell dead or alive with external functions
-    let cellsToCheck = neighborCells(number, columns, rows);
+    let cellsToCheck = this.state.cellsNeighbors[number];
     let aliveNeighbors = 0;
 
     cellsToCheck.forEach((cellNum) => {
@@ -112,7 +119,8 @@ class App extends Component {
 
   Pause = () => {
     if(!this.state.gamePaused) {
-      this.setState({interval: clearInterval(this.state.interval), gamePaused: true});
+      clearInterval(this.state.interval);
+      this.setState({gamePaused: true});
     }
   }
 
@@ -125,15 +133,31 @@ class App extends Component {
       cells[cell] = 'dead';
     });
 
-    this.setState({cells: cells});
+    this.setState({cells: cells, generation: 0});
   }
 
   changeSize = (size) => {
+    //Change the number of columns and rows and generate a new table
     // eslint-disable-next-line
     columns = +(size.split('x')[0]), rows = +(size.split('x')[1]);
-    this.setState({cells: generateCells(columns, rows)});
+    this.setState({cells: generateCells(columns, rows), cellsNeighbors: generateNeighbors(columns, rows), generation: 0});
+    this.Run();
   }
   
+  changeSpeed = (speed) => {
+    //Change the interval speed of the game
+    clearInterval(this.state.interval);
+
+    const speedIntervals = {
+      'Slow': 1000,
+      'Medium': 500,
+      'Fast': 100
+    };
+
+    this.setState({intervalSpeed: speedIntervals[speed]});
+    if (!this.state.gamePaused) this.setState({interval: setInterval(this.nextGen, speedIntervals[speed])});
+  }
+
 }
 
 function generateCells(columns, rows) {
@@ -145,6 +169,19 @@ function generateCells(columns, rows) {
     //When first generating, assign dead or alive state to a cell randomly
     cells[cell] = ['alive', 'dead'][Math.floor(Math.random() * 2)];
   }
+
+  return cells;
+}
+
+function generateNeighbors(columns, rows) {
+  //Generate an object with cell numbers as keys and neighbor cells arrays as values
+  let cells = {};
+  let totalCells = columns * rows;
+
+  for (var cell = 1; cell <= totalCells; cell++) {
+    cells[cell] = neighborCells(cell, columns, rows);
+  }
+
   return cells;
 }
 
@@ -158,10 +195,9 @@ function cloneObject(object) {
   return objectCopy;
 }
 
-function neighborCells(numberStr, columns, rows) {
+function neighborCells(number, columns, rows) {
   //Return an array of cell numbers of the neighbors of a cell with a specific number given as argument
   let neighborsArray = [];
-  let number = +numberStr;
 
   if(number % columns !== 0) {
     //If cell has a neighbor on the right, push it to the array

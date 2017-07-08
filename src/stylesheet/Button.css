@@ -1,7 +1,3 @@
-@font-face {
-    font-family: 'Roboto Condensed';
-    src: url(../fonts/RobotoCond.ttf);
-}
 .Button {
     font-size: 1.3em;
     font-family: 'Roboto Condensed', sans-serif;
@@ -11,8 +7,12 @@
     background: #660033;
     color: #cae8cb;
     cursor: pointer;
-    transition: color .3s;
+    transition: all .3s;
 }
 .Button:hover {
     color: #4CAF50;
+}
+.Button:active {
+    background: #4CAF50;
+    color: #cae8cb;
 }

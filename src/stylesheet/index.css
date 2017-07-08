@@ -1,6 +1,13 @@
+@font-face {
+    font-family: 'Highspeed';
+    src: url(../fonts/HIGHSPEED.TTF);
+}
+@font-face {
+    font-family: 'Roboto Condensed';
+    src: url(../fonts/RobotoCond.ttf);
+}
 body {
   background: #660033;
   margin: 0;
   padding: 2em;
-  font-family: sans-serif;
 }

@@ -1,7 +1,3 @@
-@font-face {
-    font-family: 'Highspeed';
-    src: url(../fonts/HIGHSPEED.TTF);
-}
 .Header {
     font-family: 'Highspeed', cursive;
     font-size: 2.8em;
