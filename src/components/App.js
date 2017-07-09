@@ -17,7 +17,7 @@ class App extends Component {
 
   state = {
     interval: '',
-    intervalSpeed: 100,
+    intervalSpeed: 50,
     cells: generateCells(columns, rows),
     cellsNeighbors: generateNeighbors(columns, rows),
     gamePaused: true,
@@ -149,9 +149,9 @@ class App extends Component {
     clearInterval(this.state.interval);
 
     const speedIntervals = {
-      'Slow': 1000,
-      'Medium': 500,
-      'Fast': 100
+      'Slow': 400,
+      'Medium': 200,
+      'Fast': 50
     };
 
     this.setState({intervalSpeed: speedIntervals[speed]});
