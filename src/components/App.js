@@ -149,8 +149,8 @@ class App extends Component {
     clearInterval(this.state.interval);
 
     const speedIntervals = {
-      'Slow': 400,
-      'Medium': 200,
+      'Slow': 200,
+      'Medium': 100,
       'Fast': 50
     };
 
